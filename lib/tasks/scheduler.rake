@@ -51,7 +51,7 @@ task :update_feed => :environment do
       user.keywords.each do |keyword|
         push = "#{keyword.key}が含まれているトップニュース\n"
         dates.each do |title, url|
-          if /#{keyword}/ =~ title #タイトルにキーワードが含まれていたら
+          if /#{keyword.key}/ =~ title #タイトルにキーワードが含まれていたら
             push += "#{title}\n #{url}\n"
           end
         end
