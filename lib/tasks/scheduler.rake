@@ -13,6 +13,7 @@ task :update_feed => :environment do
 
   # 使用したxmlデータ（毎日朝6時更新）：以下URLを入力すれば見ることができます。
   URL  = "https://news.yahoo.co.jp/topics"
+  charset = nil
 
   html = open(URL) do |page|
     #文字コードを取得して
