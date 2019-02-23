@@ -24,31 +24,17 @@ class LinebotController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           # event.message['text']：ユーザーから送られたメッセージ
           input = event.message['text']
-          #url  = "https://www.drk7.jp/weather/xml/13.xml"
-          #xml  = open( url ).read.toutf8
-          #doc = REXML::Document.new(xml)
-          #xpath = 'weatherforecast/pref/area[4]/'
+          user = User.find_by(line_id: event['source']['userId'])
           case input
-            # 「明日」or「あした」というワードが含まれる場合
-          when /.*(明日|あした).*/
-            # info[2]：明日の天気
-            per06to12 = doc.elements[xpath + 'info[2]/rainfallchance/period[2]'].text
-            per12to18 = doc.elements[xpath + 'info[2]/rainfallchance/period[3]'].text
-            per18to24 = doc.elements[xpath + 'info[2]/rainfallchance/period[4]'].text
-
-          when /.*(明後日|あさって).*/
-            per06to12 = doc.elements[xpath + 'info[3]/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info[3]/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info[3]/rainfallchance/period[4]l'].text
-
-          else
-            per06to12 = doc.elements[xpath + 'info/rainfallchance/period[2]l'].text
-            per12to18 = doc.elements[xpath + 'info/rainfallchance/period[3]l'].text
-            per18to24 = doc.elements[xpath + 'info/rainfallchance/period[4]l'].text
-
+          when /.*(とうろく|登録).*/ #一個ずつ登録させないといけない
+            key = input.scan(/.*「(.+?)」.*/)
+            key.each do |k|
+              Keyword.create(user_id: user.id, key: k[0])
+            end
+            push = "[#{k[0]}]登録したよ"
+          #when /.*(トップ|ニュース|top).*/ あとで機能を改良するところ
           end
-          # テキスト以外（画像等）のメッセージが送られた場合
-        else
+        else  # テキスト以外（画像等）のメッセージが送られた場合
           push = "テキスト以外はわからないよ〜"
         end
         message = {
