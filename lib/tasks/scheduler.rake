@@ -49,7 +49,7 @@ task :update_feed => :environment do
     if user.keywords.present? #keyword登録されていたら
       # ここに配列からキーワードのニュースを取り出す処理を書き込む。それらをurlと共に、メッセージに入れる。（pushに付け足す）
       user.keywords.each do |keyword|
-        push = "#{keyword}が含まれているトップニュース\n"
+        push = "#{keyword.key}が含まれているトップニュース\n"
         dates.each do |title, url|
           if /#{keyword}/ =~ title #タイトルにキーワードが含まれていたら
             push += "#{title}\n #{url}\n"
