@@ -34,6 +34,7 @@ class LinebotController < ApplicationController
               push = "[#{k[0]}]登録したよ"
             end
           when /.*(一覧|itirann|いちらん).*/
+            push = "あなたが登録しているキーワードはこれだよ\n"
             if user.keywords.present?
               user.keywords.each do |k|
                 push += "[#{k.key}]\n"
