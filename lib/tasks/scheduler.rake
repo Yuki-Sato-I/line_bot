@@ -27,12 +27,9 @@ task :update_feed => :environment do
   titles = docs.scan(/onmousedown=.+\/pickup\/.+'">(?<html_title>.+?)</)
 
   dates = {}
-  a = []
-  b = []
+  
   news_url.size.times do |n|
     dates.store(titles[n][0], news_url[n][0])
-    a << titles[n][0]
-    b << news_url[n][0]
   end
 
   users = User.all
