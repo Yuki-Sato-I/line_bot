@@ -33,6 +33,14 @@ class LinebotController < ApplicationController
               Keyword.create(user_id: user.id, key: k[0])
               push = "[#{k[0]}]登録したよ"
             end
+          when /.*(一覧|itirann|いちらん).*/
+            if user.keywords.present?
+              user.keywords.each do |k|
+                push += "[#{k.key}]\n"
+              end
+            else
+              push = "登録しているキーワードはないよ"
+            end
           # when /.*(トップ|ニュース|top).*/ あとで機能を改良するところ
           end
         else  # テキスト以外（画像等）のメッセージが送られた場合
