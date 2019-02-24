@@ -38,15 +38,15 @@ task :update_feed => :environment do
   users = User.all
 
   users.each do |user|
-    # 発信するメッセージの設定
-    push = "君が登録したワードのニュースはこれだよ。\n"
-    message = {
-      type: 'text',
-      text: push
-    }
-    response = client.push_message(user.line_id, message)
+    if user.keywords.present?
+      # 発信するメッセージの設定
+      push = "君が登録したワードのニュースはこれだよ。\n"
+      message = {
+        type: 'text',
+        text: push
+      }
+      response = client.push_message(user.line_id, message)
 
-    if user.keywords.present? #keyword登録されていたら
       # ここに配列からキーワードのニュースを取り出す処理を書き込む。それらをurlと共に、メッセージに入れる。（pushに付け足す）
       user.keywords.each do |keyword|
         push = "#{keyword.key}が含まれているトップニュース\n"
@@ -61,13 +61,6 @@ task :update_feed => :environment do
         }
         response = client.push_message(user.line_id, message)
       end
-    else #keyword登録されていなかったら
-      push = "登録しているワードはないよ。"
-      message = {
-        type: 'text',
-        text: push
-      }
-      response = client.push_message(user.line_id, message)
     end
   end
   "OK"

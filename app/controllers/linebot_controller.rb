@@ -29,7 +29,7 @@ class LinebotController < ApplicationController
           case input
           when /.*(とうろく|登録).*/ # 一個ずつ登録させないといけない
             key = input.scan(/.*「(.+?)」.*/)
-            unless Keyword.where(user_id: user.id, key: key[0][0]).present?
+            unless Keyword.find_by(user_id: user.id, key: key[0][0]).present?
               key.each do |k|
                 Keyword.create(user_id: user.id, key: k[0])
                 push = "[#{k[0]}]登録したよ"
