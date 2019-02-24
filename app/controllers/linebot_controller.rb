@@ -14,6 +14,7 @@ class LinebotController < ApplicationController
     unless client.validate_signature(body, signature)
       error 400 do 'Bad Request' end
     end
+    push = ""
     events = client.parse_events_from(body)
     events.each { |event|
       case event
@@ -26,13 +27,13 @@ class LinebotController < ApplicationController
           input = event.message['text']
           user = User.find_by(line_id: event['source']['userId'])
           case input
-          when /.*(とうろく|登録).*/ #一個ずつ登録させないといけない
+          when /.*(とうろく|登録).*/ # 一個ずつ登録させないといけない
             key = input.scan(/.*「(.+?)」.*/)
             key.each do |k|
               Keyword.create(user_id: user.id, key: k[0])
               push = "[#{k[0]}]登録したよ"
             end
-          #when /.*(トップ|ニュース|top).*/ あとで機能を改良するところ
+          # when /.*(トップ|ニュース|top).*/ あとで機能を改良するところ
           end
         else  # テキスト以外（画像等）のメッセージが送られた場合
           push = "テキスト以外はわからないよ〜"
