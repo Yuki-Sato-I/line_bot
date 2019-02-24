@@ -29,13 +29,13 @@ class LinebotController < ApplicationController
           case input
           when /.*(とうろく|登録).*/ # 一個ずつ登録させないといけない
             key = input.scan(/.*「(.+?)」.*/)
-            if Keyword.where(user_id: user.id, key: key[0]).present?
+            unless Keyword.where(user_id: user.id, key: key[0]).present?
               key.each do |k|
                 Keyword.create(user_id: user.id, key: k[0])
                 push = "[#{k[0]}]登録したよ"
               end
             else
-              push = "[#{key[0]}]はもう登録しているよ"
+              push = "[#{key[0][0]}]はもう登録しているよ"
             end
           when /.*(一覧|itirann|いちらん).*/
             push = "あなたが登録しているキーワードはこれだよ\n"
@@ -49,7 +49,7 @@ class LinebotController < ApplicationController
           when /.*(削除|さくじょ).*/
             key = input.scan(/.*「(.+?)」.*/)
             Keyword.find_by(user_id: user.id, key: key[0]).destroy
-            push = "[#{key[0]}]削除したよ"
+            push = "[#{key[0][0]}]削除したよ"
           # when /.*(トップ|ニュース|top).*/ あとで機能を改良するところ
           end
         else  # テキスト以外（画像等）のメッセージが送られた場合
