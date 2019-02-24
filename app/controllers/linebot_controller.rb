@@ -48,7 +48,8 @@ class LinebotController < ApplicationController
             end
           when /.*(削除|さくじょ).*/
             key = input.scan(/.*「(.+?)」.*/)
-            if Keyword.find_by(user_id: user.id, key: key[0][0]).destroy
+            if keyword = Keyword.find_by(user_id: user.id, key: key[0][0]).present?
+              keyword.destroy
               push = "[#{key[0][0]}]削除したよ"
             else
               push = "[#{key[0][0]}]は登録されていないよ"
