@@ -42,6 +42,10 @@ class LinebotController < ApplicationController
             else
               push = "登録しているキーワードはないよ"
             end
+          when /.*(削除|さくじょ).*/
+            key = input.scan(/.*「(.+?)」.*/)
+            Keyword.find_by(user_id: user.id, key: key[0]).destroy
+            push = "[#{key[0]}]削除したよ"
           # when /.*(トップ|ニュース|top).*/ あとで機能を改良するところ
           end
         else  # テキスト以外（画像等）のメッセージが送られた場合
